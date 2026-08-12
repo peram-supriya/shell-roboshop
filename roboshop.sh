@@ -28,5 +28,7 @@ do
     --output text
     )
 
+    echo "IP address is: $IP"
+
     fi
 done
