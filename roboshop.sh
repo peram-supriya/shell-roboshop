@@ -12,7 +12,7 @@ do
     --security-group-ids $SG_ID \
     --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=$instance}]' \
     --query 'Instances[0].InstanceId' \
-    --output json)
+    --output text)
 
     if [ $Instance_ID == "frontend" ]; then
         IP=$(aws ec2 describe-instances \
