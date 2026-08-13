@@ -31,13 +31,13 @@ validate(){
 cp $Script_Directory/rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
 validate $? "Added rabbitmq repo"
 
-dnf install rabbitmq-server -y
+dnf install rabbitmq-server -y &>>$log_file
 validate $? "Install rabbitmq server"
 
-systemctl enable rabbitmq-server
+systemctl enable rabbitmq-server &>>$log_file
 systemctl start rabbitmq-server
 validate $? "Enable and started rabbitmq"
 
-rabbitmqctl add_user roboshop roboshop123
-rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
+rabbitmqctl add_user roboshop roboshop123 &>>$log_file
+rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &>>$log_file
 validate $? "create users"
