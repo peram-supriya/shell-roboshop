@@ -7,7 +7,7 @@ R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
-Script_Directory=$pwd
+Script_Directory=$PWD
 Mongodb_Host=mongodb.thoshi.online
 
 if [ $user_id -ne 0 ]; then
@@ -20,7 +20,7 @@ mkdir -p $Log_folder
 
 validate(){
     
-    if [ $? -ne 0 ]; then
+    if [ $1 -ne 0 ]; then
      echo "$2 installation failed" | tee -a $log_file
     exit 1
     else
@@ -37,7 +37,7 @@ validate $? "enbaling node js" &>>$log_file
 dnf install nodejs -y &>>$log_file
 validate $? "installing node js"
 
-id roboshop &>>$logs_file
+id roboshop &>>$log_file
 
 if [ $? -ne 0 ]; then
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
