@@ -5,7 +5,7 @@ Log_folder="/var/log/shell-roboshop"
 log_file="/var/log/shell-roboshop/$0.log"
 R="\e[31m"
 G="\e[32m"
-y="\e[33m"
+Y="\e[33m"
 N="\e[0m"
 
 if [ $user_id -ne 0 ]; then
@@ -35,8 +35,12 @@ validate $? "enbaling node js" &>>$log_file
 dnf install nodejs -y &>>$log_file
 validate $? "installing node js"
 
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
-validate $? "creating system user"
+if [ $? -ne 0 ]; then
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+    validate $? "creating system user"
+else
+ echo -e "Rboshop user already exist ... $Y skipping $N"
+fi
 
 mkdir /app 
 validate $? "creating directory" &>>$log_file
