@@ -68,4 +68,4 @@ validate $? "Reload"
 systemctl daemon-reload
 systemctl enable payment 
 systemctl start payment
-validate $? "enable and start payment
+validate $? "enable and start payment"
