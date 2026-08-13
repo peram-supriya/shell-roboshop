@@ -78,7 +78,7 @@ dnf install mongodb-mongosh -y
 Index=$(mongosh --host $Mongodb_Host --quiet --eval 'db.getMongo().getDBNames().indexOf("catalogue")') 
 
 if [ $Index -le 0 ]; then 
-    mongosh --host Mongodb_Host </app/db/master-data.js
+    mongosh --host $Mongodb_Host </app/db/master-data.js
     validate $? "Loding products"
 else 
     echo -e "products already loaded ...$Y SKIPPING $N"
