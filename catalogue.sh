@@ -42,8 +42,25 @@ else
  echo -e "Rboshop user already exist ... $Y skipping $N"
 fi
 
-mkdir /app 
+mkdir -p /app 
 validate $? "creating directory" &>>$log_file
 
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
 validate $? "downdloading catalogue code"
+
+cd /app
+validate $? "moving to app directory"
+
+unzip /tmp/catalogue.zip
+validate $? "unzip catalogue code"
+
+npm install
+validate $? "istalling dependencies"
+
+cp catalogue.service /etc/systemd/system/catalogue.service
+validate $? "created systemctl service"
+
+systemctl daemon-reload
+systemctl enable catalogue 
+systemctl start catalogue
+validate $? "starting and enabling catalogue"
