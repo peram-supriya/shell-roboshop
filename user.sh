@@ -1,0 +1,88 @@
+#!/bin/bash
+
+user_id=$(id -u)
+Log_folder="/var/log/shell-roboshop"
+log_file="/var/log/shell-roboshop/$0.log"
+R="\e[31m"
+G="\e[32m"
+Y="\e[33m"
+N="\e[0m"
+Script_Directory=$PWD
+Mongodb_Host=mongodb.thoshi.online
+
+if [ $user_id -ne 0 ]; then
+    echo -e "$R Running as root user $N" | tee -a $log_file
+    exit 1
+fi
+
+mkdir -p $Log_folder
+
+
+validate(){
+    
+    if [ $1 -ne 0 ]; then
+     echo "$2 installation failed" | tee -a $log_file
+    exit 1
+    else
+    echo "$2 installation successful" | tee -a $log_file
+    fi
+}
+
+dnf module disable nodejs -y &>>$log_file
+validate $? "disabling nodejs default version"
+
+dnf module enable nodejs:20 -y
+validate $? "enbaling node js" &>>$log_file
+
+dnf install nodejs -y &>>$log_file
+validate $? "installing node js"
+
+id roboshop &>>$log_file
+
+if [ $? -ne 0 ]; then
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+    validate $? "creating system user"
+else
+ echo -e "Rboshop user already exist ... $Y skipping $N"
+fi
+
+mkdir -p /app 
+validate $? "creating directory" &>>$log_file
+
+curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
+validate $? "downdloading catalogue code"
+
+cd /app
+validate $? "moving to app directory"
+
+rm -rf /app/*
+validate $? "removing existing code"
+
+unzip /tmp/catalogue.zip
+validate $? "unzip catalogue code"
+
+npm install
+validate $? "istalling dependencies"
+
+cp $Script_Directory/catalogue.service /etc/systemd/system/catalogue.service
+validate $? "created systemctl service"
+
+systemctl daemon-reload
+systemctl enable catalogue 
+systemctl start catalogue
+validate $? "starting and enabling catalogue"
+
+cp $Script_Directory/mongo.repo /etc/yum.repos.d/mongo.repo
+dnf install mongodb-mongosh -y
+
+Index=$(mongosh --host $Mongodb_Host --quiet --eval 'db.getMongo().getDBNames().indexOf("catalogue")') 
+
+if [ $Index -le 0 ]; then 
+    mongosh --host $Mongodb_Host </app/db/master-data.js
+    validate $? "Loding products"
+else 
+    echo -e "products already loaded ...$Y SKIPPING $N"
+fi
+
+systemctl restart catalogue
+validate $? "Restarting catalogue"
