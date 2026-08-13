@@ -65,6 +65,7 @@ validate $? "created systemctl service"
 systemctl daemon-reload
 validate $? "Reload"
 
+systemctl daemon-reload
 systemctl enable payment 
 systemctl start payment
 validate $? "enable and start payment
