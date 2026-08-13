@@ -43,7 +43,7 @@ validate $? "Remove default code"
 curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
 cd /usr/share/nginx/html 
 unzip /tmp/frontend.zip
-vlidate $? "unzip the code"
+validate $? "unzip the code"
 
 rm -rf /etc/nginx/nginx.conf
 
