@@ -12,10 +12,9 @@ if [ $user_id -ne 0 ]; then
     echo -e "$R Running as root user $N" | tee -a $log_file
     exit 1
 fi
+
 mkdir -p $Log_folder
 
-echo "installing mongodb"
-dnf install mongodb-org -y
 
 validate(){
     
@@ -40,7 +39,7 @@ useradd --system --home /app --shell /sbin/nologin --comment "roboshop system us
 validate $? "creating system user"
 
 mkdir /app 
-validate $? "creating directory"
+validate $? "creating directory" &>>$log_file
 
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
 validate $? "downdloading catalogue code"
