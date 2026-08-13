@@ -74,6 +74,7 @@ if [ $? -ne 0 ]; then
     mysql -h $Mysql_host -uroot -pRoboShop@1 < /app/db/schema.sql
     mysql -h $Mysql_host -uroot -pRoboShop@1 < /app/db/app-user.sql 
     mysql -h $Mysql_host -uroot -pRoboShop@1 < /app/db/master-data.sql
+    validate $? "Loaded data into MySQL"
 else
     echo -e "data is already loaded ... $Y Skipping $N"
 fi
