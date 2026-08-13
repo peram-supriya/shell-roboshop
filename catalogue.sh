@@ -7,6 +7,7 @@ R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
+Script_Directory=$pwd
 
 if [ $user_id -ne 0 ]; then
     echo -e "$R Running as root user $N" | tee -a $log_file
@@ -60,7 +61,7 @@ validate $? "unzip catalogue code"
 npm install
 validate $? "istalling dependencies"
 
-cp catalogue.service /etc/systemd/system/catalogue.service
+cp $Script_Directory/catalogue.service /etc/systemd/system/catalogue.service
 validate $? "created systemctl service"
 
 systemctl daemon-reload
