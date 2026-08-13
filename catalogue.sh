@@ -8,7 +8,7 @@ G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 Script_Directory=$pwd
-
+Mongodb_Host=mongodb.thoshi.online
 if [ $user_id -ne 0 ]; then
     echo -e "$R Running as root user $N" | tee -a $log_file
     exit 1
@@ -68,3 +68,18 @@ systemctl daemon-reload
 systemctl enable catalogue 
 systemctl start catalogue
 validate $? "starting and enabling catalogue"
+
+cp $Script_Directory/mongo.repo /etc/yum.repos.d/mongo.repo
+dnf install mongodb-mongosh -y
+
+Index=$(mongosh --host $Mongodb_Host --quiet --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
+
+if [ $Index -le 0 ]; then 
+    mongosh --host Mongodb_Host </app/db/master-data.js
+    validate $? "Loding products"
+else 
+    echo -e "products already loaded ...$Y SKIPPING $N"
+fi
+
+systemctl restart catalogue
+validate $? "Restarting catalogue"
