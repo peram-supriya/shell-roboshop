@@ -14,16 +14,14 @@ if [ $user_id -ne 0 ]; then
 fi
 mkdir -p $Log_folder
 
-echo "installing mongodb"
-dnf install mongodb-org -y
 
 validate(){
     
     if [ $? -ne 0 ]; then
-     echo "mongodb installation failed" | tee -a $log_file
+     echo "$2 installation failed" | tee -a $log_file
     exit 1
     else
-    echo "mongodb installation successful" | tee -a $log_file
+    echo "$2 installation successful" | tee -a $log_file
     fi
 }
 
