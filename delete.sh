@@ -14,9 +14,9 @@ if [ ! -d $Logs_dire ]; then
 fi
 
 File_To_Delete=$(find $Logs_dire -name "*.log" -mtime +14)
-echo "$File_To_Delete"
+# echo "$File_To_Delete"
 
 # Example reading a comma-separated file
 while IFS= read -r filepath; do
-    echo "$filepath"
+    echo "Deleting the file: $filepath"
 done <<< $logs_dire
