@@ -19,4 +19,6 @@ File_To_Delete=$(find $Logs_dire -name "*.log" -mtime +14)
 # Example reading a comma-separated file
 while IFS= read -r filepath; do
     echo "Deleting the file: $filepath"
+    rm -f $filepath
+    echo "deleted the file: $filepath
 done <<< $Logs_dire
